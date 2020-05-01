@@ -1,0 +1,17 @@
+{
+  "name": "Scrummer Azure Board",
+  "version": "2.1",
+  "description": "Add column total size in azure devops board",
+  "icons": {
+    "128": "logo512.png"
+  },
+  "background": {
+    "persistent": false,
+    "scripts": ["background_script.js"]
+  },
+  "browser_action": {
+    "default_title": "Add total points"
+  },
+  "manifest_version": 2,
+  "permissions": ["activeTab"]
+}
