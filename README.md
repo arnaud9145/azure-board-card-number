@@ -29,3 +29,4 @@ or
 - Make the plugin run automatically when you go on azure board, instead of clicking on the extension
 - Publish the extension on the chrome store
 - Move the javascript code in a separate file
+- Update results when board is updated
