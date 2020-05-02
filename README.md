@@ -24,9 +24,14 @@ or
 - Go to details
 - Update
 
+# Known issues
+
+- When modifying the size on the card in the board and pressing **ENTER**, the column sum is not updated (clicking on the menu, or clicking on the screen to validate works)
+
 # TODO
 
-- Make the plugin run automatically when you go on azure board, instead of clicking on the extension
-- Publish the extension on the chrome store
-- Move the javascript code in a separate file
-- Update results when board is updated
+- [x] Make the plugin run automatically when you go on azure board, instead of clicking on the extension
+- [ ] Publish the extension on the chrome store
+- [x] Move the javascript code in a separate file
+- [x] Update results when board is updated
+- [x] Add popup which links to this repo
