@@ -24,6 +24,10 @@ or
 - Go to details
 - Update
 
+# Known issues
+
+- When modifying the size on the card in the board and pressing **ENTER**, the column sum is not updated (clicking on the menu, or clicking on the screen to validate works)
+
 # TODO
 
 - [x] Make the plugin run automatically when you go on azure board, instead of clicking on the extension
