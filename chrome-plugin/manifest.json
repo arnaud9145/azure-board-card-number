@@ -1,6 +1,6 @@
 {
   "name": "Scrummer Azure Board",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add column total size in azure devops board",
   "icons": {
     "16": "./assets/icon/icon16.png",
