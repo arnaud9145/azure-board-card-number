@@ -1,60 +1,107 @@
+const CLASS_NAME_TO_WATCH_FOR_TRIGGERING_NEW_COMPUTATION = "lwp";
+const CLASS_NAME_TO_FIND_SWIMLANES =
+  "cell member-content member content swimlanes";
+const CLASS_NAME_TO_FIND_COLUMS = "cell member-content member content";
+const CLASS_NAME_TO_FIND_HEADERS = "header-container row header";
+const CLASS_NAME_TO_FIND_COLUMNS_IN_SWIMLANE = "content-container row content";
 
-const computeSums = function(columns) {
-  let columnSums = []
-  for(let colIndex = 0; colIndex < columns.length; colIndex++){
-    const column = columns[colIndex]
-    let columnSum = 0
-    for(let i = 0; i < column.children.length; i++) {
-      const child = column.children[i]
-      const pointContainers = child.getElementsByClassName("witRemainingWork")
-      for(let pointContainer of pointContainers) {
-        if(pointContainer.children[0].innerText !== '') {
-          columnSum += parseFloat(pointContainer.children[0].innerText.replace(',', '.'))
+const computeSums = function (columns) {
+  let columnSums = [];
+  for (let colIndex = 0; colIndex < columns.length; colIndex++) {
+    const column = columns[colIndex];
+    let columnSum = 0;
+    for (let i = 0; i < column.children.length; i++) {
+      const child = column.children[i];
+      const pointContainers = child.getElementsByClassName("witRemainingWork");
+      for (let pointContainer of pointContainers) {
+        if (pointContainer.children[0].innerText !== "") {
+          columnSum += parseFloat(
+            pointContainer.children[0].innerText.replace(",", ".")
+          );
         }
       }
     }
-    columnSums.push(columnSum)
+    columnSums.push(columnSum);
   }
-  return columnSums
-}
+  return columnSums;
+};
 
-const designSums = function(columnSums, headers) {
-  for(let headIndex = 0; headIndex < headers.length; headIndex++){
-    const header = headers[headIndex]
-    const topcount = header.getElementsByClassName("limit")
-    if(topcount.length > 0) {
-      topcount[0].innerText = columnSums[headIndex]
-      topcount[0].style.color="white"
-      topcount[0].style.backgroundColor = "#47bae0"
-      topcount[0].style.padding = "1px 5px"
-      topcount[0].style["border-radius"]= "5px"
-      topcount[0].style["font-weight"]= "normal"
-      topcount[0].style["margin-left"]= "5px"
-      topcount[0].style["font-size"]= "18px"
+const computeSumsBySwimelanes = function (swimlanesContainer) {
+  const swimlanes = swimlanesContainer[0].children;
+  const columnSums = [];
+  for (let laneIndex = 0; laneIndex < swimlanes.length; laneIndex++) {
+    const swimlane = swimlanes[laneIndex];
+    const laneColumns = swimlane.getElementsByClassName(
+      CLASS_NAME_TO_FIND_COLUMNS_IN_SWIMLANE
+    );
+    columnSums.push(computeSums(laneColumns[0].children));
+  }
+  return columnSums;
+};
+
+const designSums = function (columnSums, headers) {
+  for (let headIndex = 0; headIndex < headers.length; headIndex++) {
+    const header = headers[headIndex];
+    const topcount = header.getElementsByClassName("limit");
+    if (topcount.length > 0) {
+      topcount[0].innerText = columnSums[headIndex];
+      topcount[0].style.color = "white";
+      topcount[0].style.backgroundColor = "#47bae0";
+      topcount[0].style.padding = "1px 5px";
+      topcount[0].style["border-radius"] = "5px";
+      topcount[0].style["font-weight"] = "normal";
+      topcount[0].style["margin-left"] = "5px";
+      topcount[0].style["font-size"] = "18px";
     }
   }
-}
+};
 
-const CLASS_NAME_TO_WATCH_FOR_TRIGGERING_NEW_COMPUTATION = "lwp"
-const CLASS_NAME_TO_FIND_COLUMS = "cell member-content member content"
-const CLASS_NAME_TO_FIND_HEADERS = "header-container row header"
+const combineLaneSums = function (columnSumsBySwimlanes) {
+  const columnSums = columnSumsBySwimlanes[0];
+  for (let index = 1; index < columnSumsBySwimlanes.length; index++) {
+    columnSumsBySwimlanes[index].forEach((sum, i) => {
+      columnSums[i] += sum;
+    });
+  }
 
-const observerMethod = function(mutations) {
-  for(let i = 0; i < mutations.length; i++){
+  return [0, ...columnSums];
+};
 
-    const mutationTarget = mutations[i].target
-    if(mutationTarget && mutationTarget.className === CLASS_NAME_TO_WATCH_FOR_TRIGGERING_NEW_COMPUTATION){
-
-      const columns = document.getElementsByClassName(CLASS_NAME_TO_FIND_COLUMS)
-      columnSums = computeSums(columns)
-      let headers = document.getElementsByClassName(CLASS_NAME_TO_FIND_HEADERS)[0]
-      if(headers){
-        designSums(columnSums, headers.children)
+const observerMethod = function (mutations) {
+  for (let i = 0; i < mutations.length; i++) {
+    const mutationTarget = mutations[i].target;
+    if (
+      mutationTarget &&
+      mutationTarget.className ===
+        CLASS_NAME_TO_WATCH_FOR_TRIGGERING_NEW_COMPUTATION
+    ) {
+      const swimlanes = document.getElementsByClassName(
+        CLASS_NAME_TO_FIND_SWIMLANES
+      );
+      if (swimlanes.length > 0) {
+        const columnSumsBySwimlanes = computeSumsBySwimelanes(swimlanes);
+        const columnSums = combineLaneSums(columnSumsBySwimlanes);
+        let headers = document.getElementsByClassName(
+          CLASS_NAME_TO_FIND_HEADERS
+        )[0];
+        if (headers) {
+          designSums(columnSums, headers.children);
+        }
+      } else {
+        const columns = document.getElementsByClassName(
+          CLASS_NAME_TO_FIND_COLUMS
+        );
+        const columnSums = computeSums(columns);
+        let headers = document.getElementsByClassName(
+          CLASS_NAME_TO_FIND_HEADERS
+        )[0];
+        if (headers) {
+          designSums(columnSums, headers.children);
+        }
       }
     }
   }
 };
 
 const observer = new MutationObserver(observerMethod);
-observer.observe(document, {subtree : true, childList : true})
-
+observer.observe(document, { subtree: true, childList: true });
