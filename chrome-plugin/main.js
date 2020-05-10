@@ -52,6 +52,25 @@ const designSums = function (columnSums, headers) {
       topcount[0].style["font-weight"] = "normal";
       topcount[0].style["margin-left"] = "5px";
       topcount[0].style["font-size"] = "18px";
+    } else {
+      const lastHeader = header.getElementsByClassName(
+        "click-to-edit horizontal"
+      );
+      const container = document.createElement("DIV");
+      container.className = "container";
+      const span = document.createElement("SPAN");
+      span.className = "limit";
+      span.style.color = "white";
+      span.style.backgroundColor = "#47bae0";
+      span.style.padding = "1px 5px";
+      span.style["border-radius"] = "5px";
+      span.style["font-weight"] = "normal";
+      span.style["font-size"] = "18px";
+      span.style["position"] = "absolute";
+      const textnode = document.createTextNode(columnSums[headIndex]);
+      span.appendChild(textnode);
+      container.appendChild(span);
+      lastHeader[0].appendChild(container);
     }
   }
 };
@@ -78,9 +97,15 @@ const observerMethod = function (mutations) {
       const swimlanes = document.getElementsByClassName(
         CLASS_NAME_TO_FIND_SWIMLANES
       );
+      const columns = document.getElementsByClassName(
+        CLASS_NAME_TO_FIND_COLUMS
+      );
       if (swimlanes.length > 0) {
         const columnSumsBySwimlanes = computeSumsBySwimelanes(swimlanes);
         const columnSums = combineLaneSums(columnSumsBySwimlanes);
+
+        const lastColumnSum = computeSums([columns[columns.length - 1]])[0];
+        columnSums.push(lastColumnSum);
         let headers = document.getElementsByClassName(
           CLASS_NAME_TO_FIND_HEADERS
         )[0];
@@ -88,9 +113,6 @@ const observerMethod = function (mutations) {
           designSums(columnSums, headers.children);
         }
       } else {
-        const columns = document.getElementsByClassName(
-          CLASS_NAME_TO_FIND_COLUMS
-        );
         const columnSums = computeSums(columns);
         let headers = document.getElementsByClassName(
           CLASS_NAME_TO_FIND_HEADERS
