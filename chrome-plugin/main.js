@@ -34,7 +34,44 @@ const computeSumsBySwimelanes = function (swimlanesContainer) {
     const laneColumns = swimlane.getElementsByClassName(
       CLASS_NAME_TO_FIND_COLUMNS_IN_SWIMLANE
     );
-    columnSums.push(computeSums(laneColumns[0].children));
+
+    const columnSum = computeSums(laneColumns[0].children);
+    columnSums.push(columnSum);
+
+    const swimlaneHeader = swimlane.getElementsByClassName(
+      "member-header ui-droppable"
+    );
+    if (
+      swimlaneHeader &&
+      swimlaneHeader[0] &&
+      !swimlaneHeader[0].className.includes("swimlane-collapsed")
+    ) {
+      let pointsContainer = swimlaneHeader[0].getElementsByClassName(
+        "points-container swimlane-member-header"
+      )[0];
+      if (!pointsContainer) {
+        pointsContainer = document.createElement("DIV");
+        pointsContainer.className = "points-container swimlane-member-header";
+        pointsContainer.style["vertical-align"] = "top";
+        pointsContainer.style["margin-top"] = "5px";
+        swimlaneHeader[0].appendChild(pointsContainer);
+      }
+      pointsContainer.innerHTML = "";
+      for (let i = 0; i < columnSum.length; i++) {
+        const span = document.createElement("SPAN");
+        span.className = "limit";
+        span.style.color = "white";
+        span.style.backgroundColor = "#47bae0";
+        span.style.padding = "1px 4px";
+        span.style["border-radius"] = "4px";
+        span.style["font-weight"] = "normal";
+        span.style["font-size"] = "12px";
+        span.style["margin-left"] = i === 0 ? "75px" : "208px";
+        const textnode = document.createTextNode(columnSum[i]);
+        span.appendChild(textnode);
+        pointsContainer.appendChild(span);
+      }
+    }
   }
   return columnSums;
 };
