@@ -66,7 +66,7 @@ const computeSumsBySwimelanes = function (swimlanesContainer) {
         span.style["border-radius"] = "4px";
         span.style["font-weight"] = "normal";
         span.style["font-size"] = "12px";
-        span.style["margin-left"] = i === 0 ? "75px" : "208px";
+        span.style["margin-left"] = i === 0 ? "50px" : "208px";
         const textnode = document.createTextNode(columnSum[i]);
         span.appendChild(textnode);
         pointsContainer.appendChild(span);
