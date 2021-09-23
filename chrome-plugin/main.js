@@ -21,7 +21,7 @@ const computeSums = function (columns) {
         }
       }
     }
-    columnSums.push(columnSum);
+    columnSums.push(Math.floor(columnSum * 100) / 100);
   }
   return columnSums;
 };
