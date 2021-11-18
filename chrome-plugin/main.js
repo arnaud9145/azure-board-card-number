@@ -12,12 +12,14 @@ const computeSums = function (columns) {
     let columnSum = 0;
     for (let i = 0; i < column.children.length; i++) {
       const child = column.children[i];
-      const pointContainers = child.getElementsByClassName("witRemainingWork");
-      for (let pointContainer of pointContainers) {
-        if (pointContainer.children[0].innerText !== "") {
-          columnSum += parseFloat(
-            pointContainer.children[0].innerText.replace(",", ".")
-          );
+      if (!child.classList.contains("filterHide")) {
+        const pointContainers = child.getElementsByClassName("witRemainingWork");
+        for (let pointContainer of pointContainers) {
+          if (pointContainer.children[0].innerText !== "") {
+            columnSum += parseFloat(
+                pointContainer.children[0].innerText.replace(",", ".")
+            );
+          }
         }
       }
     }
